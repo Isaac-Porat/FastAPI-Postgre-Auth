@@ -9,12 +9,15 @@ from sqlalchemy.orm import Session
 from schemas import Token
 from models import UserModel
 from database import engine
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger("uvicorn")
 
-JWT_SECRET_KEY = "dbf4ce163b672338f85328540cc9820e85d37cf6fda73d985edc18450bef5729"
-HASHING_ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+HASHING_ALGORITHM = os.getenv("HASHING_ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -25,7 +28,7 @@ def get_password_hash(password):
 def create_access_token(data: dict):
     to_encode = data.copy()
 
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
 
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=HASHING_ALGORITHM)
