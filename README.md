@@ -1,6 +1,6 @@
 **FastAPI backend routing with PostgreSQL**
 
-**env environmental variables**
+**env environmental variables:**
 - `ADMIN_USERNAME`
 - `ADMIN_PASSWORD`
 - `JWT_SECRET_KEY`
